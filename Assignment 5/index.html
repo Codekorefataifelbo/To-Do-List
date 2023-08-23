@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To-Do List</title>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="task-container">
+            <ul id="tasks">
+                
+            </ul>
+        </div>
+        <form id="new-task-form">
+            <div class="input-container">
+                <input type="text" name="task" placeholder="New Task" class="task-input">
+                <input type="submit" value="Add Task" class="task-button">
+            </div>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            
+            function loadTasks() {
+                $.ajax({
+                    url: "retrieve-task.php",
+                    method: "GET",
+                    success: function(data) {
+                        $("#tasks").html(data);
+                    }
+                });
+            }
+
+            
+            loadTasks();
+
+            
+            $("#new-task-form").submit(function(e) {
+                e.preventDefault();
+                var task = $("input[name='task']").val();
+                $.ajax({
+                    url: "add-task.php",
+                    method: "POST",
+                    data: { task: task },
+                    success: function() {
+                        loadTasks();
+                        $("input[name='task']").val(""); 
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
